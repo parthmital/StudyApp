@@ -5,7 +5,7 @@ import tempfile
 import os
 
 router = APIRouter()
-ocr = PaddleOCR(use_angle_cls=True, lang="en")
+ocr = PaddleOCR(use_angle_cls=True, lang="en")  # Angle classification already enabled
 
 
 @router.post("/upload_pdf")
@@ -18,7 +18,7 @@ async def upload_pdf(file: UploadFile = File(...)):
         for idx, img in enumerate(images):
             img_path = os.path.join(tmpdir, f"page_{idx}.jpg")
             img.save(img_path)
-            result = ocr.ocr(img_path, cls=True)
+            result = ocr.ocr(img_path)  # ❌ Don't pass cls=True
             text = "\n".join([line[1][0] for line in result[0]])
             text_output.append(text)
 
