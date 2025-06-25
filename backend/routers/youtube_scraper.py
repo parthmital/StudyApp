@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Query
-from ytsearch import VideosSearch
+from youtubesearchpython import VideosSearch
 
 router = APIRouter()
 

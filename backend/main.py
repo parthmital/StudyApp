@@ -1,4 +1,3 @@
-# == backend/main.py ==
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import (
@@ -10,6 +9,11 @@ from routers import (
 )
 
 app = FastAPI()
+
+# Health check route
+@app.get("/")
+def ping():
+    return {"status": "Backend is alive"}
 
 # Allow React frontend to connect
 app.add_middleware(
