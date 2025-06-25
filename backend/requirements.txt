@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+python-multipart
+paddleocr
+pdf2image
+pillow
+keybert
+ytsearch
