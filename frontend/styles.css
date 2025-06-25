@@ -1,0 +1,27 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+}
+
+.app-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 2rem;
+}
+
+.upload-container {
+    margin-bottom: 2rem;
+}
+
+.notes-viewer .note {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.notes-viewer .note h3 {
+    margin-top: 0;
+}
