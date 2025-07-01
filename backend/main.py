@@ -6,6 +6,7 @@ from routers import (
     topic_extractor,
     youtube_scraper,
     pyq_matcher,
+    auto_pipeline,
 )
 
 app = FastAPI()
@@ -30,3 +31,4 @@ app.include_router(notes_generator.router, prefix="/notes")
 app.include_router(topic_extractor.router, prefix="/topics")
 app.include_router(youtube_scraper.router, prefix="/youtube")
 app.include_router(pyq_matcher.router, prefix="/pyq")
+app.include_router(auto_pipeline.router, prefix="/auto")
