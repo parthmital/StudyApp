@@ -1,13 +1,23 @@
-import React from 'react';
-import FileUpload from './components/FileUpload';
-import NotesViewer from './components/NotesViewer';
+import React, { useState } from 'react';
+import FileUpload from './components/FileUpload.jsx';
+import NotesViewer from './components/NotesViewer.jsx';
+import TopicPanel from './components/TopicPanel.jsx';
+import YouTubeResults from './components/YouTubeResults.jsx';
 
 function App() {
+  const [notes, setNotes] = useState('');
+  const [topics, setTopics] = useState([]);
+  const [videos, setVideos] = useState([]);
+
   return (
-    <div className="app-container">
-      <h1>Study Assistant</h1>
-      <FileUpload />
-      <NotesViewer />
+    <div className="container">
+      <h1>StudyApp</h1>
+      <FileUpload onNotesGenerated={setNotes} />
+      <NotesViewer notes={notes} />
+      {notes && <TopicPanel notes={notes} onTopicsExtracted={setTopics} />}
+      {topics.length > 0 && (
+        <YouTubeResults topics={topics} setVideos={setVideos} />
+      )}
     </div>
   );
 }

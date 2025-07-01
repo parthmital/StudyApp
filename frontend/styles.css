@@ -1,27 +1,33 @@
 body {
-    margin: 0;
     font-family: Arial, sans-serif;
-    background: #f2f2f2;
-}
-
-.app-container {
-    max-width: 900px;
-    margin: auto;
+    margin: 0;
     padding: 2rem;
+    background-color: #f5f5f5;
 }
 
-.upload-container {
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.block {
     margin-bottom: 2rem;
 }
 
-.notes-viewer .note {
-    background: white;
+.note-box {
+    background: #eef;
     padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    white-space: pre-wrap;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
-.notes-viewer .note h3 {
-    margin-top: 0;
+button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
 }

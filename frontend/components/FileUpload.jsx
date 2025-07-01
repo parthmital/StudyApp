@@ -1,22 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { uploadPDF } from '../api/backend';
 
-function FileUpload() {
-    const handleUpload = (e) => {
-        const file = e.target.files[0];
-        const formData = new FormData();
-        formData.append('file', file);
+function FileUpload({ onNotesGenerated }) {
+    const [file, setFile] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-        fetch('http://localhost:8000/ocr/upload_pdf', {
-            method: 'POST',
-            body: formData
-        })
-            .then(res => res.json())
-            .then(data => console.log(data));
+    const handleUpload = async () => {
+        setLoading(true);
+        try {
+            let fullNotes = '';
+            await uploadPDF(file, (chunk) => {
+                fullNotes += chunk;
+                onNotesGenerated(fullNotes);
+            });
+        } catch (error) {
+            console.error("❌ Upload failed:", error);  // ← LOG THIS
+            alert(error.message);
+        }
+        setLoading(false);
     };
 
     return (
-        <div className="upload-container">
-            <input type="file" onChange={handleUpload} />
+        <div className="block">
+            <h2>Upload PDF</h2>
+            <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+            <button onClick={handleUpload} disabled={!file || loading}>
+                {loading ? 'Processing...' : 'Generate Notes'}
+            </button>
         </div>
     );
 }
