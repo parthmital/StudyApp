@@ -1,5 +1,0 @@
-ollama run llama3
-
-.venv\Scripts\Activate
-cd backend
-uvicorn main:app --reload

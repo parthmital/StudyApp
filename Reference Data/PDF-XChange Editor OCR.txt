@@ -1,0 +1,2648 @@
+BCSE205L
+Computer Architecture and Organization 
+Module 7 - High Performance Processors
+Module:? | High Performance Processors __________________________7 Hours _____
+Classification of models - Flynn’s taxonomy of parallel machine models (SISD, SIMD, MISD, 
+MIMD) - Pipelining: Two stages, Multi stage pipelining, Basic performance issues in 
+pipelining, Hazards, Methods to prevent and resolve hazards and their drawbacks -
+Approaches to deal branches - Superscalar architecture: Limitations of scalar pipelines, 
+superscalar versus super pipeline architecture, superscalar techniques, performance 
+evaluation of superscalar architecture - performance evaluation of parallel processors: 
+Amdahl's law, speed-up and efficiency.
+Dr. P.Keerthika 
+Associate Professor
+School of Computer Science and Engineering
+Vellore Institute of Technology, Vellore
+
+
+Parallel Processing
+
+Distributed Memory
+
+■ Parallel computers are those that emphasize the parallel
+processing between the operations in some way. MEMORY CPU CPU MEMORY
+network
+
+MEMORY CPU CPU MEMORY
+
+■Various Varieties
+■ Shared Memory
+■ Distributed Memory 
+■ Hybrid Memory
+
+Shared Memory
+
+CPU
+
+CPU MEMORY CPU
+
+CPU
+
+Hybrid Memory
+CPU CPU
+MEMORY —
+CPU
+
+CPU CPU
+-------- MEMORY
+CPU CPU CPU
+network
+
+CPU CPU 
+MEMORY — —
+CPU CPU
+
+CPU CPU
+— +— MEMORY
+CPU CPU
+
+
+Classification of Parallel Machine 
+models - Flynn’s Taxonomy
+■ This classification was first studied and proposed by Michael Flynn in 1972. 
+■ Flynn did not consider the machine architecture for classification of parallel
+computers
+■ He introduced the concept of instruction and data streams for categorizing of
+computers.
+■ Instruction stream - a flow of instructions from main memory to the CPU
+■ Data stream - a flow of operands between processor and memory
+■ All the computers classified by Flynn are not parallel computers
+■ Let ls and Ds are minimum numberof streams flowing at any point in the
+execution
+
+Data Stream
+
+Single
+
+---------------------------r
+Multiple
+
+SISD
+Uniprocessors
+
+SIMD 
+Vector Processors
+Parallel Processing
+
+Multiple Single
+
+Instruction Stream
+
+MISD MIMD
+May be Pipelined Mu EtrComp uiers
+Computers MultpPrcce&sorv
+< 7
+
+Flynn’s Classification of Computers
+
+
+Classification of Parallel Machine 
+models - Flynn’s Taxonomy
+Instruction Cycle ■ Start
+■ Calculate the address of the instruction to be executed
+■ Fetch the instruction
+■ Decode the instruction
+■ Calculate the operand address
+■ Fetch the operands
+■ Execute the instructions
+■ Store the results
+■ If more instructions to be executed, go to step 2 else stop.
+
+
+Flynn’s Taxonomy
+of Parallel Machine models
+Single Instruction Single Data (SISD)
+- Traditional sequential computing systems Classical Von-Neumann Architecture 
+Single Instruction Multiple Data (SIMD)
+Multiple Instructions Multiple Data (MIMD)
+Multiple Instructions Single Data (MISD)
+Most Common and general Parallel Machine
+Computer Architectures
+
+SISD SIMD MIMD MISD
+
+
+Flynn’s Taxonomy
+of Parallel Machine models
+Shared Memory
+Processor Organizations
+CPU
+
+CPU MEMORY
+
+CPU
+
+Shared Memory 
+(tightly coupled)
+
+Distributed Memory 
+(loosely coupled)
+
+Distributed Memory
+MEMORY CPU CPU
+' network "
+
+MEMORY
+
+---------►
+
+Symmetric Multi Processor systems
+
+MEMORY CPU CPU MEMORY
+
+- Uniform Memory Access SMP NUMA Clusters
+Non - Uniform Memory Access
+
+
+Flynn’s Taxonomy
+- SISD mAn SISD computing system -uniprocessor
+
+achine - capable of executing a single 
+■A serial computer instruction, operating on a single data
+stream.
+• In SISD, machine instructions are
+processed in a sequential manner and 
+computers adopting this model are 
+popularly called sequential computers.
+• Most conventional computers have SISD
+architecture.
+• All the instructions and data to be
+processed have to be stored in primary 
+memory.
+
+■ SISD machines are conventional serial computers that process only one stream
+of instructions and one stream of data.
+
+load B
+
+store C
+
+store A
+
+■ I J =D J =1 
+■ Examples
+■ CDC 6600 which is unpipelined but has multiple functional units.
+■ CDC 7600 which has a pipelined arithmetic unit.
+■ Amdhal 470/6 which has pipelined instruction processing.
+■ Cray-1 which supports vector processing. I» = D> =1
+
+Main 
+Control Unit ALU Memory
+
+
+Flynn’s Taxonomy 
+-SISD
+
+Processor 
+I/O pis
+cu
+(ALU)
+
+Control
+Unit
+
+Processing
+Unit
+
+Memory 
+Unit
+
+llnstructionl 
+Stream
+□ Machine Instructions are executed in sequential order.
+□ This architecture is also known sequential computers.
+J Many of conventional computer follows this architecture. 
+□ Instructions and data must be stored in primary memory. 
+□ Clock defines the speed of processing in SISD.
+
+Data 
+Stream
+
+IS
+
+This is the uniprocessor architecture 
+CU= Control Unit
+PE= Processing Element (same as ALU) 
+M= Memory
+IS= Instruction Stream
+DS= Data Stream
+pIS= Micro-Instructions Stream
+
+
+Flynn’s Taxonomy 
+- SIMD
+
+MM;
+
+■ Multiple processing elements work under the control of a single control unit. 
+■ It has one instruction and multiple data stream
+■ Main memory can also be divided into modules for generating multiple data
+streams acting as a distributed memory
+■ Examples of SIMD organisation are ILLIAC-IV, PEPE, BSP, STARAN, MPP, DAP
+and the Connection Machine (CM-1).
+■ A type of parallel computer
+■ Single instruction: All processing units execute the same instruction at any
+given clock cycle
+■ Multiple data: Each processing unit can operate on a different data element
+
+prpv instruct prpi/ instruct prev instruct
+
+load A(1) loadA{2) load A (nJ
+
+load 8(1) load B(2) load B(n)
+
+C(1)=A(irB(1| C(2)-A|2)’B(2) C(n)=A(n)'3(n]
+
+store C(1) store C(2) store C(n)
+
+next instruct next instruct next instruct
+
+atu n
+
+pi P2 Pn
+
+
+Flynn’s Taxonomy 
+- SIMD
+A SIMD system is a multiprocessor machine 
+capable of executing the same instruction on 
+all the CPUs but operating on different data 
+streams.
+Machines based on a SIMD model are well 
+suited to scientific computing since they 
+involve lots of vector and matrix operations.
+Information can be passed to all the 
+processing elements (PEs) organized data 
+elements of vectors can be divided into 
+multiple sets(N-sets for N-Processor systems) 
+and each Processor can process one data set.
+
+• SIMD Processor
+
+PEi
+
+CU 
+memory
+(Program)
+
+IS;
+
+CU plS
+
+PEN
+
+CU= Control Unit
+PE= Processing Element 
+M= Memory
+IS= Instruction Stream 
+DS= Data Stream 
+LM=Local Memory
+
+
+Flynn’s Taxonomy 
+-SIMD
+• At one time, one instruction operates on
+many data
+• Data parallel architecture-Vector
+architecture has similar characteristics, 
+but achieve the parallelism with 
+pipelining
+Each instruction is executed on a different 
+set of data by different processors i.e 
+multiple processing units by different 
+processors i.e multiple processing units of 
+the same type process on multiple-data 
+streams.
+This group is dedicated to array processing 
+machines.
+SIMD computers operate on vectors of data.
+
+Processing 
+Unit 1
+
+Memory 
+Instruction Unit 1
+
+Stream Data
+Stream
+
+Memory 
+Unit 2
+
+Processing 
+Unit 2
+
+Control
+Unit Data
+Stream
+Processing
+UnitN
+
+Memor 
+Data Unit N
+Stream
+□ Scientific computing based on SIMD Architecture.
+□ Example of this model are vectors and arrays.
+AO
+□ If we want to perform arithmetic operation with all the
+element of Array A then it can be done by this architecture. 
+□ Example: Add 10 with all elements, Multiply 5 with all
+element, rotate 3 bits right of all the elements.
+
+
+Flynn’s Taxonomy
+
+ISi DS
+
+DS
+
+Main Menwrv
+
+DS
+
+IS
+CU. Pt,
+
+DS
+
+IS.
+
+-MISD
+Multiple processing elements are organised under the control of multiple control 
+units.
+Each control unit is handling one instruction stream and processed through its 
+corresponding processing element.
+A single data stream is fed into multiple processing units.
+Each processing unit operates on the data independently via independent 
+instruction streams.
+But each processing element is processing only a single data stream at a time
+All processing elements are interacting with the common shared memory.
+The only known example of a computer capable of MISD operation is the C.mmp 
+built by Carnegie-Mellon University.
+IS >1
+Ds =l
+Real time computers need to be fault tolerant where several processors execute the same data for 
+producing the redundant data. This is also known as N- version programming. All these redundant 
+data are compared as results which should be same; otherwise faulty unit is replaced. Thus MISD machines can 
+be applied to fault tolerant real time computers.
+
+is.
+prev instruct prev instruct prev instruct
+load Am— In H AMi -load A(1
+_c(i)=A(iri
+
+store C(1)
+
+C(2)=A(1)*2
+
+store C(2)
+
+C(n)*A(1fn_
+
+store C(n)
+
+next instruct next instruct next instruct 
+PI P2 Pn
+
+
+Flynn’s Taxonomy 
+- MISD
+An MISD computing system is a multiprocessor machine 
+capable of executing different instructions on different 
+Processors but all of them operating on the same dataset 
+Each processor executes a different sequence of 
+instructions.
+In case of MISD computers, multiple processing units 
+operate on one single-data stream .
+In practice, this kind of organization has never been used
+
+❖ MISD - Multiple Instruction Single Data stream
+□ in MISD, Here multiple processor executes different
+instructions with single data stream.
+Data 
+Processing Stream
+Unit 1
+Processing 
+I Un t 2
+
+Main 
+Memory
+
+Processing
+Unit N
+
+Control 
+Unit 1
+
+>cessor Processor Prccessor
+CU CU CU
+pis plS : pis
+
+Memory
+
+PE PE PE
+DS DS DS DS
+
+□ This architecture is not implemented commercially.
+□ Example : Lets have same data A to be used in multiple
+instructions.
+• A s Sin A
+• 8 = Cos A 
+• C = Tan A
+
+CU= Control Unit, PE= Processing Element, M= Memory
+
+
+Flynn’s Taxonomy
+
+DS.
+
+MM2
+
+cuu PEn
+
+prev instruct prev instruct prev instruct
+call funcD do
+load B(1) alpha=w"3
+sum=x*2
+store C(1) call sub1(i,j) 10 continue
+ne; next instruct iruct
+
+-MIMD
+■ Multiple instruction streams operate on multiple data streams
+■ The processors work on their own data with their own instructions.
+■ Tasks executed by different processors can start or finish at different times. 
+■ This classification actually recognizes the parallel computer.
+■ Examples include; C.mmp, Burroughs D825, Cray-2, SI, Cray X-MP, HEP,
+Pluribus, IBM 370/168 MP, Univac 1100/80, Tandem/16, IBM 3081/3084, 
+C.m*, BBN Butterfly, Meiko Computing Surface (CS-1), FPS T/40000, iPSC.
+■ MIMD organization is the most popular for a parallel computer.
+■ In the real sense, parallel computers execute the instructions in MIMD mode. 
+■I S>1,D S >1
+
+
+Flynn’s Taxonomy 
+-MIMD
+An MIMD system is a multiprocessor machine which is capable of executing 
+multiple instructions on multiple data sets.
+Each Processor in the MIMD model has separate instruction and data streams; 
+therefore machines built using this model are capable to any kind of application. 
+SMPs (Symmetric Multi Processor systems), clusters, and NUMA(Non-Uniform 
+Memory Access) systems fit into this category.
+Most common and general parallel machine
+Each processor has a separate program.
+An instruction stream is generated from each program
+Each instruction operates on different data.
+Several processing units operate on multiple-data streams.
+
+
+Flynn’s Taxonomy 
+- MIMD
+1. MIMD with shared memory 2. MIMD with Distributed memory
+• An alternative to using a single shared memory is to 
+distribute the memory by subdividing it into a 
+number of separate modules with each module 
+assigned to a different processing element
+
+If the processors share a common memory, then 
+each processor accesses programs and data stored 
+in the shared memory.
+The processors also communicate with each other 
+via the shared memory.
+
+Control Processing Local
+|_Unlt 1 PJtJTHL Unitl Data Memory 1
+Control Processing
+
+Stream 1
+
+Local 
+Unit 2 Unit 2 Data Memory 2
+
+□ In MIMD, Here multiple processor executes different
+instructions with multiple data stream.
+
+Shared 
+Memory
+
+Control Processing
+Unitl Unitl Data
+Stream 1 
+Control L ________J Processing 1. ,
+Unit 2 Unit 2 Data
+■
+■
+Control
+
+■
+B
+Processing
+
+Stream 2
+
+UnltNU UnitN Data
+Stream N
+
+Stream 2
+
+Control
+UnitN
+
+Processing 
+Unit N
+
+Local 
+Data Memory N
+□ Shared Memory in MIMD system Is Symmetric Stream N
+multiprocessor system (SMP).
+□ Different processor takes instructions and data from □ local Memory with MIMD is Non Uniform Memory Access
+NUMA organization.
+NUMA is costlier compared to SMP.
+Collection of Uniprocessor or SMP can be used to form 
+cluster.
+
+common shared memory.
+□ With the use of buses, multiple processor executes
+program along with shared memory.
+
+J
+□
+
+
+Flynn’s Taxonomy 
+- MIMD
+3. MIMD with Shared or Distributed memory
+Processor
+IS | pis DS
+CUi PEi
+Shared or 
+Distributed
+Processor Memory
+IS ; plS
+cuj-
+
+:i DS 
+PEN*;--------
+
+CU= Control Unit, PE= Processing Element, M= Memory 
+IS= Instruction Stream, DS= Data Stream
+
+
+BCSE205L
+Computer Architecture and Organization
+Module 7 - Parallelism - Pipelining
+Module:? | High Performance Processors __________________________7 Hours _____
+Classification of models - Flynn’s taxonomy of parallel machine models (SISD, SIMD, MISD, 
+MIMD) - Pipelining: Two stages, Multi stage pipelining, Basic performance issues in 
+pipelining, Hazards, Methods to prevent and resolve hazards and their drawbacks -
+Approaches to deal branches - Superscalar architecture: Limitations of scalar pipelines, 
+superscalar versus super pipeline architecture, superscalar techniques, performance 
+evaluation of superscalar architecture - performance evaluation of parallel processors: 
+Amdahl’s law, speed-up and efficiency.
+
+
+Parallelism
+
+Data Parallelism
+• Parallelism w.r.t data
+• Many data items can be processed in the same manner at the same time 
+• SIMD or Vector processors
+Functional Parallelism
+• Parallelism w.r.t modules
+• Program has different independent modules that can execute simultaneously 
+Instruction-level Parallelism (ILP)
+• Parallelism w.r.t instructions
+• Family of processor and compiler design techniques that improves performance
+• Parallel or simultaneous execution of a sequence of instructions of a computer
+program.
+• Measure of the number of instructions that can be performed during a single clock
+cycle
+
+
+Implementations of ILP
+
+• Pipelining
+• Superscalar Architecture
+• Dependency checking on chip
+• Multiple Processing Elements (eg. ALU, Shift)
+• VLIW (Very Long Instruction Word Architecture)
+• Simple hardware, Complex Compiler 
+• Multi processor computers
+
+
+Instruction cycle
+
+I
+
+Pipelining Instruction 1 Instruction 2 Instruction 3
+
+No overlap 
+Non-pipelined Execution
+
+Overlapping of instructions partially
+Pipelining is a process of arrangement of hardware 
+elements of the CPU such that its overall 
+performance is increased.
+Simultaneous execution of more than one instruction 
+takes place in a pipelined processor.
+Technique of decomposing a sequential process into 
+sub-operations, with each sub-operation being 
+executed in a dedicated segment that operates 
+concurrently with all other segments.
+Pipelining improves instruction throughput rather 
+than individual instruction execution time
+
+Instruction 1
+Ml Instruction ® 
+■■■ instruction 3
+Overlap
+Pipelined Execution
+Instruction cycle
+
+I
+
+Instruction 1 Instructions Instructions
+
+No overlap
+
+Instruction 1 
+Instruction 2 M
+■ Instruction 3
+Overlap
+0 It 1.6t 2t Time
+Pipelined vs Non-Pipelined Instruction Execution
+
+
+Pipelining
+Laundry Example
+Ann, Brian, Cathy, Dave
+Each has one load of clothes to 
+wash,
+
+folder 
+20 mins
+
+washer 
+30 mins
+
+dryer
+40 mins
+
+
+Pipelining
+
+Sequential Laundry
+
+6 Hours 
+Time--------------------------------------------------------------
+30 40 20 30 40 20 30 40 20 30 40 20
+A
+B
+C
+D
+
+Task Order
+
+What would you do?
+
+
+Pipelining
+
+Sequential Laundry
+_______________________________6 Hours
+Time -----------------------------------------------------------—
+30 40 20 30 40 20 30 40 20 30 40 20
+A
+B
+C
+D
+
+Task Order
+
+What would you do?
+
+
+Pipelining
+
+Pipelined Laundry
+__________3.5 Hours
+Time —1
+
+Observations
+• A task has a series of
+stages;
+• Stage dependency:
+e.g., wash before dry; 
+• Multi tasks with
+overlapping stages;
+• Simultaneously use diff
+resources to speed up;
+• Slowest stage determines
+the finish time;
+
+o
+
+Task Order
+
+
+Pipelining
+
+Pipelined Laundry
+
+Observations
+• No speed up for
+individual task; 
+e.g., A still takes 
+30+40+20=90
+• But speed up for average
+task execution time;
+e.g., 3.5*60/4=52.5 < 
+30+40+20=90
+
+__________3.5 Hours
+Time ----- = = = =—
+30 40 40 40 40 20
+
+Task Order
+
+
+Pipelining
+An implementation technique whereby multiple instructions 
+overlapped in execution.
+e.g., B wash while A dry
+o
+
+are
+
+Essence: Start executing one instruction before completing the 
+previous one.
+Significance: Make fast CPUs.
+
+
+Pipelining
+• A Pipelining is a series of stages, where some work is done at
+each stage in parallel.
+• The stages are connected one to the next to form a pipe -
+instructions enter at one end, progress through the stages, and exit 
+at the other end.
+Instruction Pipelining 
+Two Stage Pipeline
+Four Stage Pipeline
+
+Six Stage Pipeline
+
+Fetch
+
+IF ID IE RW
+n DI co FO El wo
+
+
+Pipelining
+- Two Stage Instruction Pipelining
+• The pipeline has two independent stages.
+• First stage - fetches an instruction and buffers it. When the second
+stage is free, the first stage passes it the buffered instruction.
+• Second stage - executing the instruction, the first stage takes
+advantage of any unused memory cycles to fetch and buffer the next 
+instruction. This is called instruction prefetch or fetch overlap.
+CC1 CC2 CC3 CC4 CC5 CC6
+
+INS1 Fetch Execute
+INS2 Fetch Execute
+INS3 Fetch Execute
+INS4 Fetch Execute
+INS5 Fetch Execute
+
+Koidt
+
+
+Pipelining
+Two Stage Instruction Pipelining
+Fetch + Execution 1
+___ Time
+>1 *2 13 ------ Time
+Clock cycle 12 3 4
+F 1 E 1 F 2 *2 F 3 *3
+
+» > *
+
+Instruction
+
+(a) Sequential execution
+
+Interstage butter
+B1
+
+»2
+
+I
+
+F 2 E 2
+‘a EF E
+
+3 E 3
+
+Instruction
+fetch
+unit
+
+_______hx. ______rx. Execution
+----------- -----------iX > unit (c) Pipelined execution
+
+Figure 8.1, Basic idea of instruction pipelining.
+
+(b) Hardware organization
+
+
+Pipelining
+- Four Stage Instruction Pipelining
+Clock
+Four stages: Control Unit
+• Instruction Fetch (IF) from memory 
+• Instruction Decode (ID) in CPU
+• Instruction Execution (IE) in ALU
+
+Butter Register K2L-4
+
+Buffer Register R4
+
+Buffer Register R1
+
+Instruction 
+Decode
+
+Instruction 
+Execute
+
+Butter
+
+Instruction 
+Fetch
+
+Result 
+Writing
+
+In
+
+• Result Writing (RW) in memory or Register.
+• Since there are four stages, all the instructions pass through the four stages to
+complete the instruction execution.
+
+
+Pipelining
+- Four Stage Instruction Pipelining
+Performance:
+• In 8 clock cycles, 5 instructions
+have got executed in a four-stage 
+pipelined design.
+• The same would have taken 20 (5 
+instructions x 4 cycles for each) 
+clock cycles in a non pipelined 
+architecture.
+• The performance improvement 
+depends on the number of stages
+in the design.
+
+Clock cycle ----------->
+t1 t2 t3 t4 t5 t6 t7 t8
+Instr. 1 IF ID IE RW
+Instr. 2 — IF IO IE RW — — — —
+Instr. 3 — — — IF ID IE RW — — —
+Instr. 4 — —— — EF ID IE RW — —
+Instr. 5 —- — — — — — IF ID IE RW
+■ ‘
+No instruction Number of stages
+engaged
+
+Instruction
+
+
+Pipelining
+- Four Stage Instruction Pipelining
+General Structure of a 4-Segment Pipeline
+Clock cycle
+Clock
+
+Input — * 1
+
+J2_ 13 t4 t5 t6 t7 t8 
+Instr. 1( k IF ID IE RW
+Instr. 2 IF ID IE RW — — —
+Instr. 3 — IF ID IE RW — —
+Instr. 4 — — IF ID IE IM
+Instr. 5 — — — IF ID IE RW
+1
+\
+NIo instruction Number of stages
+engaged
+
+UOi:|?3QJ}SU |
+
+Space-Time Diagram
+
+Segmennt 1
+
+|2 3 4 5 |6 , > 7 8 9
+
+V 1
+
+T2 T3" I4 T5 T6
+2 T1 T2 T3 T4 T5 T6
+
+3 L T1 T2 T3 T4 T5 T6
+
+T1 T2 T3 T4 T5 T6
+
+V
+
+Clock cycles
+
+
+Pipelining
+- Six Stage Instruction Pipelining
+• A typical instruction cycle can be split into many sub cycles like Fetch instruction, Decode
+instruction, Execute and Store.
+• The instruction cycle and the corresponding sub cycles are performed for each instruction. These
+sub cycles for different instructions can thus be interleaved or in other words these sub cycles of 
+many instructions can be carried out simultaneously, resulting in reduced overall execution time. 
+This is called instruction pipelining.
+• The more are the stages in the pipeline, the more the throughput is of the CPU.
+• If the instruction processing is split into six phases, the pipelined CPU will have six different
+stages for the execution of the sub phases.
+
+
+Pipelining
+- Six Stage Instruction Pipelining
+
+Stages
+• Fetch Instruction (Fl)
+• Decode Instruction ((DI) 
+• Calculate Operand (CO) 
+• Fetch Operands (FO)
+• Execute Instruction (El) 
+• Write Operand (WO)
+
+• Fl: Instructions are fetched from the memory into a temporary
+buffer before it gets executed.
+• DI: The instruction is decoded by the CPU so that the necessary
+op codes and operands can be determined. (Instruction Decode) 
+• CO: Based on the addressing scheme used, either operands are 
+directly provided in the instruction or the effective address has
+to be calculated. (Address Generator)
+• FO: Once the address is calculated, the operands need to be
+fetched from the address that was calculated. This is done in this 
+phase. (Data Fetch)
+• El: The instruction can now be executed.
+• WO: Once the instruction is executed, the result from the
+execution needs to be stored or written back in the memory. 
+(Write Back)
+
+
+Pipelining
+- Six Stage Instruction Pipelining
+The timing diagram of a six stage instruction pipeline is shown
+Clock 1 2 3 4 5 6 7 8
+J1 FI DI CO FO El WO
+12 FI DI CO FO El WO
+J - FI DI CO FO El wo
+• In case the time required by each of the sub phase is not same appropriate delays need to be
+introduced.
+• From this timing diagram it is clear that the total execution time of 3 instructions in this 6 stages
+pipeline is 8-time units.
+• The first instruction gets completed after 6 time unit, and thereafter in each time unit it
+completes one instruction.
+• Without pipeline, the total time required to complete 3 instructions would have been 18 (6*3)
+time units. Therefore, there is a speed up in pipeline processing and the speed up is related to the 
+number of stages.
+
+
+Pipelining
+A technique of decomposing a sequential process 
+into suboperations, with each subprocess being 
+executed in a partial dedicated segment that 
+operates concurrently with all other segments.
+Aj * Bj + C, for i = 1, 2, 3, ... , 7 OPERATIONS IN EACH PIPELINE STAGE
+Bi Memory c.
+
+R1 R2
+
+Multiplier
+
+R3 R4
+
+Adder
+
+RS
+
+Segment 1
+
+Clock 
+Pulse 
+Number
+
+Segment 1 Segment 2 Segment 3
+R1 R2 R3 R4 R5
+1 A1 B1
+2 A2 B2 A1 * B1 C1
+3 A3 B3 A2* B2 C2 A1 * B1 + C1 
+4 A4 B4 A3* B3 C3 A2 * B2 + C2 
+5 A5 B5 A4*B4 C4 A3 * B3 + C3 
+6 A6 B6 A5* B5 C5 A4 * B4 + C4 
+7 A7 B7 A6*B6 C6 A5 * B5 + C5 
+8 A7*B7 C7 A6 * B6 + C6
+9 A7 * B7 + C7
+
+Segment 2
+
+Segment 3
+
+R1 <-A s, R2<-Bj
+R3 <- R1 * R2, R4 <- Cs 
+R5 <- R3 + R4
+
+Load A; and B, 
+Multiply and load Cj 
+Add
+
+
+Speed Up and Efficiency
+For a pipeline processor:
+• k-stage pipeline processes with a clock cycle time t is used to execute n tasks.
+• The time required for the first task T to complete the operation = k*tn
+(if k segments in the pipe)
+• The time required to complete (n-1) tasks = (n-1) *tn
+• Therefore to complete n tasks using a k-segment pipeline requires = k + (n-1) *tn
+clock cycles.
+For the non-pipelined processor :
+• Time to complete each task = tn
+• Total time required to complete n tasks=n*tn
+Speed up = Time reqd. by non pipelining processing/Time reqd. by pipelining processing
+c ritn
+(k + (n — iy)t p
+
+
+Speed Up and Efficiency
+Latency of pipeline = no of stages * cycle time
+Pipeline Cycle Time = Maximum delay due to any stage + Delay due to its register (Latch 
+latency)
+Speed up = non pipelining processing/pipelining processing
+* For a pipeline processor:
+* k-stage pipeline processes xvitli a clock cycle time is used
+to execute n tasks.
+* Tire time required for the first task T x to complete the
+operation = k* (if k segments in tire pipe}
+- Tire time required to complete (n-1} tasks = (n-1) *1
+- Therefore to complete n tasks using a k-segment pipeline
+requires =k -+- (n-l> clock cycles. 
+- For tlie non pipelined processor :
+* Time to complete each task = t
+- Total time required to complete n tasks=n stel?1
+- Speed rip = non pipelining pro cessing/pip elining processing
+
+
+Speed Up and Efficiency
+As the number of tasks increases, n becomes much larger than k-1, and approaches 
+the value of n. f/.e., k+n-1 becomes n at some point)
+Under this condition, speed up becomes
+S= tn / tp
+Assume the time taken for pipeline and non pipeline circuits are same then tn11 = k*t_
+
+p
+
+Speed up reduces to S= (k*t np )/t = k
+
+p
+This shows that the theoretical maximum speedup that a pipeline can provide is k, 
+where k is the number of segments in the pipeline.
+
+
+8
+
+INSl
+INS2 j ___________
+Time between 
+INS3 Instruction
+
+8 Evaluating Speed Up
+Time between 
+Instruction
+
+Time Between the instruction Unpipelined
+
+Speed up=
+
+INSl 
+INS2 H
+
+between 
+Instruction
+
+INS3
+
+Time Between the instruction pipelined
+
+between 
+Instruction
+
+What is your observation from speedup factor Vs No. of Stages
+
+
+Pipelining - Problem 1
+4-stage pipeline
+subopertion in each stage; tp = 20nS
+100 tasks to be executed
+1 task in non-pipelined system; 20*4 = 80nS
+
+
+Pipelining - Problem 1
+
+- 4-stage pipeline
+- subopertion in each stage; tp = 20nS
+-100 tasks to be executed
+- 1 task in non-pipelined system; 20*4 = 80nS
+Pipelined System
+(k + n - 1)*tp = (4 + 99) * 20 = 2060nS
+Non-Pipelined System
+n*k*tD = 100 * 80 = 8000nS
+Speedup
+Sk = 8000 / 2060 = 3.88
+4-Stage Pipeline is basically identical to the system 
+with 4 identical function units ...
+
+Multiple Functional Units
+
+
+Evaluating Speed Up... 
+Five-Stage Pipeline
+Clock number
+Instruction number 1 2 3 4 5 6 7 8 9 
+Instruction i IF ID EX MEM WB
+Instruction i + 1 IF ID EX MEM WB
+Instruction i + 2 IF ID EX MEM WB
+Instruction i + 3 IF ID EX MEM WB
+Instruction i + 4 IF ID EX MEM WB
+Simply start a new instruction on each clock cycle; 
+Hence, Speedup = 5.
+
+
+Pipelining - Problem 2
+In certain scientific computations it is necessary to perform the arithmetic 
+operation (A, + + D,j with a stream of numbers. Specify a pipeline 
+configuration to carry out this task. List the contents of all registers m the 
+pipeline for i = 1 through 6.
+
+
+Pipelining - Problem 2
+In certain scientific computations it is necessary to perform the arithmetic 
+operation (4, + B,)(C + 0,) with a stream of numbers. Specify a pipeline 
+configuration to cany out this task. List the contents of all registers in the 
+pipeline for i - I through 6.
+
+1i
+
+k— --------------
+/ID bB (Z.
+
+
+Pipelining - Problem 3
+Draw a space-time diagram for a six-segment pipeline showing the time it 
+takes to process eight tasks,
+
+
+Pipelining — Problem 3
+Draw a space time diagram for a sw-segment pipeline showing the time it 
+takes to process eight tasks.
+__L
+
+r4
+T-
+
+i
+
+i !
+
+3
+
+!
+
+‘s
+
+T 3
+
+k + (n-1) clock cycles 
+( k -■
+
+
+Pipelining - Problem 4
+Determine the number of dock cydes that it takes to process 200 tasks in a 
+six-segment pipeline.
+
+
+Pipelining - Problem 4
+[Jetermine the number of clock cydes that it takes to process 200 tasks in a 
+six-segment pipeline.
+
+i" ■ +U - 1
+
+Ta,yki
+
+
+How to Design a PIPE...
+Latch SI Latch S2 Latch S3
+• Practical ly, it is difficult to divide instruction process into uniform stages 
+• Duration of stage equal to largest stage in the instruction process
+• All smaller stages are associated with latch to allow delay
+Instruction 
+eKecLiicn 
+order
+
+Iw $1.100(30)
+
+Iw $2, 200(30)
+
+T . 2 4 6 8 10 12 14 
+Time i I I I I I r
+Instr.
+fetch Reg ALU
+
+Data
+fetch Reg
+
+2 ns
+
+Instr.
+fetch Reg ALU
+
+Data
+fetch Reg
+
+2 ns
+
+Ins
+fati
+
+tr.
+zh Reg ALU
+
+Data 
+fetch
+
+Reg
+
+Iw $3,300(30)
+
+2 ns
+
+
+Pipelining Lessons...
+• Pipelining - doesn't help latency/ Turnaround of single task
+- it helps throughput of entire workload
+• latency/ Turnaround: Complete single task in the smallest amount of
+time
+• Throughput: Complete the most tasks in a fixed amount of time
+• Pipeline rate - limited by slowest pipeline stage 
+• Potential speedup = Number of pipe stages
+• Unbalanced lengths of pipe stages reduces speedup
+• Time to "fill" pipeline and time to "drain" it reduces speedup
+
+
+Pipelining - Adv & Disadv
+Advantages:
+• More efficient use of processor
+• Quicker time of execution of large number of instructions
+
+Disadvantages:
+• Pipelining involves adding hardware to the chip
+• Inability to continuously run the pipeline at full speed because of
+pipeline hazards which disrupt the smooth execution of the pipeline.
+
+
+Basic Performance Issues in 
+Pipelining
+Data hazards: When two instructions in a program are to be executed 
+in sequence and both access a particular memory or register 
+operand.
+• For example, if instruction A writes to a register that instruction B 
+reads from, and instruction B is in an earlier stage than instruction
+A.
+Branching: Branch instructions can be problematic in a pipeline if a 
+branch is conditional on the results of an instruction that has not yet 
+completed its path through the pipeline.
+Timing variations: The pipeline cannot take the same amount of time 
+for all the stages.
+
+
+Pipelining Hazards
+Hazard - Any condition that make pipeline to stall. 
+Stalling
+• A delay in instruction processing.
+• Itself can be used to resolve the hazard.
+Types of Hazards
+• Structural Hazard
+• Data Hazard
+• Instructional/Control Hazard
+
+
+Pipelining Hazards
+• Data hazards (Data Dependency Conflicts) - An instruction scheduled to be 
+executed in the pipeline requires the result of a previous instruction, which 
+is not yet available.
+• occur when there are dependencies between instructions, that is, the
+output of one instruction is an input to another. [Data Depended
+This can not be done
+The same registers are used in more than
+one instruction IF ID EX ME, <7
+IF (m)‘
+
+EX ME WB
+
+move $tl,$t2: 
+mov $U, $t2 add St3, Sil, 5:
+add St3,(Sti, 5
+
+// tl <- 12
+//t3 tl + 5 Resolve data dependency by stai ■> Time
+
+IF ID EX ME WB
+
+IF ■ ■ ID EX ME WB
+
+move Stl, St2: 
+add St3, Stl, 5:
+
+Pipeline stalls
+
+SpttinrK
+
+
+Pipelining Hazards
+• Data hazards (Data Dependency Conflicts)
+1
+1
+1
+1
+
+to tl t2
+1 b
+i b
+I 4
+h 1
+
+t3 t4
+1
+
+ts
+
+k
+
+i
+
+t6
+
+1
+
+t7
+
+Add, R2, R3, #100 IF ID OF . IE . os
+1
+
+1 i
+
+1 i 
+Sub, R9, R2, #30 IF ID 1 OF IE OS
+1“-------
+
+R1 <-B + C ADD DA B,C + Data dependency 
+R1 <- R1 + 1
+DA R1
+
+Data Dependency
+
+• Categories of Data Hazards:
+• data Read After Write hazards (RAW)
+• data Write After Read hazards (WAR)
+• data Write After Write hazards (WAW).
+
+
+Pipelining Hazards
+Categories of Data Hazards:
+• data Read After Write hazards (RAW)
+
+✓"■“I: add rl,r2,r3 
+—►J: sub r4,rl,r3
+• Also known as a true dependency - occurs when an instruction depends on the result of
+a previous instruction.
+• data Write After Read hazards (WAR)
+
+11. R4 <-R1 + R5 
+12.(R5)<- R1 + R2
+• Also known as anti-dependency - occurs when an instruction depends on the reading of
+a value before that value is overwritten by a previous instruction. 
+• data Write After Write hazards (WAW)
+• Also known as output-dependency - occurs when a value is written by an instruction
+before the previous instruction writes that value.
+I: sub rl ,r4,r3 
+J: add rl,r2,r3 
+K: mul r6,rl,r7
+
+
+Pipelining Hazards
+• Structural hazards(Resource Conflicts) - Hardware Resources
+required by the instructions in simultaneous overlapped execution 
+cannot be met.
+• These occur when the same hardware resource is desired by multiple
+instructions at the same time Resource clash
+Resource clash likely
+likely
+CCj cc2 CCj cc4
+Mem Decod ALU
+Mem Decod ALU 
+Mem Decod
+
+tl t2 13 14 15 tfi t7 tfi 
+Instr. 1 IF ID IE RW a - - - -
+Instr, 2 - IF ID IE AW A - -
+Instr. 3 - - IF ID IE RW -- -
+Instr. 4 — — IF ID IE RW
+Instr, 5 - - - ** IF v ID IE RW
+
+ft
+5
+
+Resource 
+Conflict
+
+ft
+c
+
+i r
+
+No instruction
+] Memory access required | | Memory access may be required
+
+
+Pipelining Hazards
+Structural Hazard - Occurrence
+Main Memory CPU
+
+Instruction code 
+Data
+
+_____________________J_
+Memory address is accessed 
+and its content is loaded to 
+this processor
+
+Cache
+Memory CPU Core
+
+Iw $tl, 0($t2) IF ID EX ME WB // Mem[$t2+0] $tl
+instruction! IF EX ME WB 
+instruction! ME WB
+instructions
+
+ID EX
+IF ID EX ME WB
+
+These two memory-access 
+operations can not happen 
+at the same time
+
+IF ID EX ME WB
+Instructions is now 
+fetched” from memory
+
+
+Pipelining Hazards
+• Instructional/Control hazards (Branching, Memory delays) -
+Branches and other instructions that change the PC make the fetch of 
+the next instruction to be delayed.
+• Eg: Branch target address is not known until the branch instruction is
+completed tO tl t2 t3 t4 t5 t6 t7 t8
+Instruction 1 ID OF
+Instruction 2 ID OF
+Instruction 3 ID
+Instruction 4
+Instruction K ID OF OS
+
+Branch Penalty
+
+JMP ID
+
+bubble
+
+PC
+
+1 IF OS
+
+Branch Delay
+
+
+Pipelining Hazards
+Instructional/Control hazards (Branching, Memory delays)
+
+tch instruction 
+Segmentl: rom memory
+Decode instruction 
+and calculate
+effective address
+
+Segment2: Step: 10 11
+Instruction DA FD EX
+Branch'? Fl DA FO EX
+yes no (Branch) Fl DA FO EX
+Fetch operand Fl Fl DA FO EX
+Segments: from memory DA FD EX
+Fl DA
+Segments Execute instruction
+DA
+Interrupt yes
+handling Interrupt?;
+no
+Update PC
+Empty pipe Instruction Execution in a 4-stage Pipeline
+
+
+Ways to Resolve Data Hazard
+• Data Hazards - resolved by
+• Hardware techniques
+• interlock
+• Operand Forwarding (bypassing, short-circuiting)
+• Software techniques
+• Using NOP instructions
+• Instruction Scheduling(compiler) for delayed load
+
+Hardware techniques: 
+• Interlock
+- hardware detects the data dependencies and delays the scheduling of the 
+dependent instruction by stalling enough clock cycles
+
+
+Register
+file
+
+MUX MUX Bypass
+path
+
+ALU
+
+R4
+
+ALU result buffer
+
+Ways to Resolve Data Hazard
+Hardware techniques:
+• Operand Forwarding (bypassing, short-circuiting)
+
+Result 
+write bus
+
+• Accomplished by a data path that routes a value from a source (usually an ALU) to a user, bypassing a
+designated register.
+• This allows the value to be produced to be used at an earlier stage in the pipeline than would otherwise be
+possible __* link*
+Clock cycle 4 5 6 7 8 9
+
+SRC1.SRC2 RSLT
+
+W: Write 
+(Register file)
+
+E; Execute 
+(ALU)
+
+Forwarding path
+
+Add R1R3,#IOO
+
+Subtract R9.R2J30 M
+
+------ Time
+Figure 6.3 Pipeline stall due to data dependency. Clock cycle 2 3 4 5 6
+
+Add Hl. R3, #100 F I D I C M I W
+
+Subtract R9. R1 #30 P | D | C | M | W
+
+Figure 6.4 Avoiding a stall by using operand forwarding.
+
+
+Ways to Resolve Data Hazard
+Instruction Scheduling(compiler) 
+Software techniques: for delayed load
+Using NOP instructions a = b + c;
+d = e -f;
+-----»■ Time
+Clock cycle 1 2 3 4 5 6 7 8 9
+Unscheduled code: Scheduled Code:
+Add R2, R3, #100
+
+f
+
+NOP 
+NOP 
+NOP 
+Subtract R9, R2, #30
+• Code size increases
+• Execution time not reduced
+
+LW 
+LW
+— ADD
+SW 
+LW 
+LW
+— SUB
+— SW
+
+Rb,b 
+Rc, c
+Ra, Rb, Rc 
+a, Ra
+Re, e
+Rf,f
+Rd, Re, Rf
+d, Rd
+
+LW Rb, b
+LW Rc, c
+LW Re, e
+ADD Ra, Rb, Rc 
+LW Rf, f
+SW a, Ra
+SUB Rd, Re, Rf 
+-*SW d, Rd
+
+Add R2. R3.ft00 | I | D [ C [ M | W |
+
+W
+
+M I W
+
+M I W
+
+NOP
+
+NOP
+
+NOP
+
+Subtract R9. R1 «0 | F [ D | C | M [ W |
+
+(bj Pipelined execution of instructions
+Figure 6.6 Uiing NOP imlrvctions to handle a data dependency in $ofrware. Delayed Load
+A load requiring that the following instruction not use its result
+
+
+Ways to Resolve Structural 
+Hazard
+Structural Hazard - Occurrence Ways to Handle SH
+Duplicate Resources 
+Pipeline the resources 
+Reordering the instructions
+
+Memory address is accessed 
+and its content is loaded to 
+this processor
+
+Iw $tl, 0($t2) IF ID EX ME WB // Mem[$t2+0] Stl 
+instruction! IF EX ME WB
+instruction! ID EX ME WB
+instructions ID EX ME WB
+'These two memory-access' 
+operations can not happen 
+t at the same time
+
+IF ID EX ME WB
+Instructions is now 
+“fetched” from memoiy
+
+
+Ways to Resolve Control Hazard
+• Branch target address is not known until the branch instruction is
+completed
+• Handling Control Hazards
+• Prefetch Target Instruction 
+• Branch Target Buffer
+• Loop Buffer
+• Branch Prediction
+• Delayed Branch
+
+tO tl t2 t3 t4 t5 t6 t7 t8
+
+ID OF
+ID OF
+ID
+
+ID OF OS
+
+Branch Penalty
+
+Instruction 1 
+Instruction 2
+Instruction 3 
+Instruction 4 
+Instruction K
+
+Branch Delay
+
+
+Ways to Resolve Control Hazard
+Prefetch Target Instruction
+• Fetch instructions in both streams, branch not taken and branch taken.
+• Both are saved until branch is executed.
+• Then, select the right instruction stream and discard the wrong stream.
+Branch Target Buffer (BTB; Associative Memory)
+Entry: Address of previously executed branches; Target instruction and the
+next few instructions.
+When fetching an instruction, search BTB.
+If found - fetch the instruction stream in BTB;
+If not - new stream is fetched and update BTB. 
+The BTB typically has a 90% prediction accuracy
+
+s entries ~i
+branch addressi target address
+
+Arbiter
+
+f cycles
+
+Compi
+
+Hint Target
+Buffer
+
+Instruction 
+memory
+
+PC IR
+Inline Prefetch n
+Buffer
+
+and buffer hit rate. Instruction Fetch
+d pipeline stages
+
+
+Ways to Resolve Control Hazard
+Loop Buffer (High Speed Register file)
+• Storage of entire loop that allows to execute a loop without accessing
+memory
+Branch Prediction
+• Guessing the branch condition, and fetch an 
+instruction stream based on the guess.
+• Correct guess eliminates the branch penalty.
+
+Clock cycle I 2 3 4 5 6
+InhlruL'Iinn
+]] (Compare) Wi
+
+J (Brandi>01
+
+□1 X
+
+Figure 8. 14 Timing when a branch dec siar has been incorrectly
+predicied as not token.
+
+
+Ways to Resolve Control Hazard
+• Delayed Branch
+• Compiler detects the branch and rearranges the instruction sequence
+by inserting useful instructions that keep the pipeline busy in the 
+presence of a branch instruction < , . ,
+Instruclion 
+Decrement
+LOOP Shift Jeft KI
+Decrement R2
+Branch=ft LOOK
+XEXT Add KI,R3
+
+Branch
+
+Shift (delays lirt J
+
+(a) Original program loop
+
+Dec reme nt ( Branch taken i
+
+LOOP Decrement K2
+Branch=0 ].C?C)F
+Shift, left Ki
+NEXT Add Ki. Ki,
+
+Branch
+
+Shift (delay slot)
+
+Add (Branch not taken!
+(b) Reordered instructions Figure- E. 13 Execution timing showing the delay sloi being Filled during lhe Iasi two
+passes ihrough the loop in Figure fl . 1 2b.
+
+
+BCSE205L
+Computer Architecture and Organization
+Module 7 - Parallelism - Superscalar Architecture
+Module:? | High Performance Processors __________________________7 Hours _____
+Classification of models - Flynn’s taxonomy of parallel machine models (SISD, SIMD, MISD, 
+MIMD) - Pipelining: Two stages, Multi stage pipelining, Basic performance issues in 
+pipelining, Hazards, Methods to prevent and resolve hazards and their drawbacks -
+Approaches to deal branches - Superscalar architecture: Limitations of scalar pipelines, 
+superscalar versus super pipeline architecture, superscalar techniques, performance 
+evaluation of superscalar architecture - performance evaluation of parallel processors: 
+Amdahl’s law, speed-up and efficiency.
+
+
+Scalar Architecture /Non-pipelined 
+Architecture
+Instruction letch unit
+
+■I
+
+! Data Path
+
+Step 1 4 Step 2 14 Step 3 4 Step 4 Step 5
+II
+Fetch
+
+II
+Decode
+
+II
+ALU 
+Operation
+
+II
+Memory 
+access
+
+II
+Write back 
+to registers
+
+Instruction queue
+
+F : Fetch 
+instruction
+
+D : Dispatch/ 
+Decode
+unit
+
+W : Write 
+results
+
+E : Execute 
+instruction
+
+Instruction 
+from memory
+
+CPU
+Datapath: a sequence of CPU circuits that execute CPU instructions step bv step
+
+I__F___ __Ii_ ID : EX iMEIWB
+
+_____________I ___________I_ ___________I____________
+
+CPI =5.0
+
+IF i IDiEXiMEiWB
+
+IF i ID iEXiMEiWB
+
+---------------►
+6 7 8 9 10 Clock Cycles
+
+
+Scalar Pipeline Architecture
+in pipelined architecture, . There is a register associated with each stage that holds the data.
+
+• The hardware of the CPU is split up into several functional units. • There is a global clock that synchronizes the working of all the stages.
+• Each functional unit performs a dedicated task. « At the beginning of each clock cycle, each stage takes the input from its register,
+• The number of functional units may vary from processor to processor. t sta ge en processes j a ta anc j feec j j(S 0U tpUt to the register of the next stage 
+• These functional units are called as stages of the pipeline.
+• Control unit manages all the stages using control signals.
+
+8 cycles / 4 instructions
+
+ID EX 
+ID
+
+IF ME WB
+ME WB
+
+CPI =2.0
+
+ID
+IF
+
+EX WB
+ID ME WB
+
+10 Clock Cycles
+
+
+Limitations of Scalar Pipeline
+° Instructions, regardless of type, 
+traverse the same set of pipeline
+stages.
+0 Only one instruction can be resident in
+each pipeline stage at any time.
+0 Instructions advance through the
+pipeline stages in a lockstep fashion.
+
+■ Scalar upper bound on throughput
+- IPC<= lorCPI >= 1
+- Solution: wide (superscalar) pipeline
+• Inefficient unified pipeline
+- Long latency for each instruction
+- Solution: diversified, specialized pipelines 
+• Rigid pipeline stall policy
+— One stalled instruction stalls all newer instructions
+- Solution: Out-of-order execution, distributed execution
+pipelines
+
+° Upper bound on pipeline throughput.
+
+
+Limitations of Scalar Pipeline
+o Processor performance can be increased
+By increasing instructions per cycle (IPC) 
+• By increasing frequency
+By decreasing the total instruction count
+1 instruction 1
+Performance = ----------------- x ----------------- x -----------------
+instruction count cycle cycle time
+_ IPC X frequency
+instruction count
+
+
+Superscalar Architecture
+
+Processor
+
+IF I ID ; EX ; ME I WB
+Datapath #1
+
+IF I ID I EX I ME : WB
+Datapath #2
+
+F: Instruction Fetch
+Unit
+
+Instruction Queue
+
+Floating 
+Point Unit
+
+W: Write
+Unit
+
+Dispatch
+Unit
+
+Integer
+Unit
+
+Multi scalar Datapath
+
+15 cycles / 6 instructions
+
+IF j ID ;EX ;ME;WB
+IF j ID ; EX ■ME ;WB CPI =2.5 Processor with Two Execution Units
+IF ■ ID ;EX ;ME ;WB
+IF ; ID ;EX ;ME;\VB Integer Register File
+
+Pipelined 
+hmctiomil 
+units
+
+>3 25
+
+IF ; ID ; EX ;ME;WB 
+IF ; ID ;EX;ME;WB
+
+—i— i— i— i— i— i— i— ;— i— ;— ;
+
+1 2 3 4 5 6 7 8 9 10 ------------*
+
+Clock Cycles Memory
+
+
+Superscalar Architecture
+Scalar processors: one instruction per cycle 
+Superscalar : multiple instruction pipelines 
+are used.
+Purpose: To exploit more instruction level 
+parallelism in user programs.
+Only independent instructions can be 
+executed in parallel.
+
+o Superscalar machines go beyond just a
+single-instruction pipeline
+Able to simultaneously advance multiple
+instructions through the pipeline stages 
+They incorporate multiple functional units
+o Superscalar machines posses the ability to
+execute instructions in an order different 
+from that specified by the original program
+• The sequential ordering of instructions in 
+standard programs implies some unnecessary
+precedences between the instructions
+o The capability of executing instructions out
+of program order relieves the sequential 
+imposition
+It allows more parallel processing of instructions 
+without requiring modification of the original 
+program
+
+
+Superscalar Techniques
+A more aggressive approach is to equip the processor with multiple processing units to handle several instructions 
+in parallel in each processing stage. With this arrangement, several instructions start execution in the same clock 
+cycle and the process is said to use multiple issue. Such processors are capable of achieving an instruction execution 
+throughput of more than one instruction per cycle. They are known as 'Superscalar Processors'.
+
+• In superscalar multiple independent instruction pipelines are
+used. Each pipeline consists of multiple stages, so that each 
+pipeline can handle multiple instructions at a time.
+
+• A superscalar processor typically fetches multiple instructions
+at a time and then attempts to find nearby instructions that 
+are independent of one another and can therefore be 
+executed in parallel.
+
+• If the input to one instruction depends on the output of a
+preceding instruction, then the latter instruction cannot 
+complete execution at the same time or before the former 
+instruction.
+
+1st invented in 1987
+
+Superscalar processor executes multiple independent 
+instructions in parallel.
+
+Common instructions (arithmetic, load/store etc) can 
+be initiated simultaneously and executed 
+independently.
+
+Applicable to both RISC & CISC, but usually in RISC
+Superscalar was designed to improve the
+performance of these operations by executing them 
+concurrently in multiple pipelines
+
+
+Super Pipeline Architecture 
+Combination of Superscalar and Pipeline architectures
+Processor
+
+EX
+
+ID
+
+Datapath #2
+
+IF
+IF
+
+7 cycles / 6 instructions
+
+CPI = 1.16
+< ___________________________,■
+
+---------------►
+1 2 3 4 5 6 7 8 9 10 Clock Cycles
+
+
+Superscalar Vs Superpipelined 
+Architecture
+Superscalar Processors Superpipelined Processors
+Temporal parallelism- known as 
+pipelining - way to execute a task as a 
+series of sub-tasks, with one functional 
+unit performing each sub-task.
+All the successive units can work 
+simultaneously, in an overlapped 
+fashion.
+Spatial parallelism - involves multiple 
+tasks that are executed simultaneously, 
+with each unit of information processed 
+by its own dedicated component.
+
+• Rely on temporal parallelism 
+• Overlapping multiple
+operations on a common 
+hardware
+• Achieved through more 
+deeply pipelined execution
+units with faster clock cycles
+
+• Requires faster transistors
+
+• Rely on spatial parallelism
+• Multiple operations running
+on separate hardware 
+concurrently
+• Achieved by duplicating 
+hardware resources such as
+execution units and register 
+file ports
+• Requires more transistors
+
+
+BCSE205L
+Computer Architecture and Organization
+
+Module 7 - Performance Evaluation - Amdahl’s Law,
+SpeedUp, Efficiency
+
+Module:? | High Performance Processors __________________________7 Hours _____
+Classification of models - Flynn’s taxonomy of parallel machine models (SISD, SIMD, MISD, 
+MIMD) - Pipelining: Two stages, Multi stage pipelining, Basic performance issues in 
+pipelining, Hazards, Methods to prevent and resolve hazards and their drawbacks -
+Approaches to deal branches - Superscalar architecture: Limitations of scalar pipelines, 
+superscalar versus super pipeline architecture, superscalar techniques, performance 
+evaluation of superscalar architecture - performance evaluation of parallel processors: 
+Amdahl’s law, speed-up and efficiency.
+
+
+Performance Evaluation of 
+Superscalar & Parallel Processors
+• Performance Metrics of Parallel Processors
+• Speedup
+
+• Efficiency
+
+Computation Time 
+Communication Time
+
+• Granularity Granularity =
+
+load balance
+
+
+Performance Evaluation - Speed Up
+Speedup:
+□ Speedup metric is a quantitative measure of performance, which defines benefit of running a program
+in parallel
+□ Speedup is the ratio of the time it takes to execute a program In serial (with one processor) to the time it
+takes to execute rn parallel (with many processors),
+□ The formula for speedup; T( 1 ) Time taken to execute the program using single processor
+S(n)= ---------- = ----------------------------------------------------------------------------------------
+T(n) Time taken to execute the program using n no, of processors
+Serial Time 
+Speedup= Parallel Time
+For example: T(l) = Isec & if n=2 processors then T(2) = 7 = 0.5 sec
+Hence $(n) — T(l)/T(2) =1/0.5 = 2 means Speedup increases by 2 times
+
+
+Performance Evaluation - Speed Up
+Example: Painting a picket fence
+• 30 minutes of preparation (serial)
+• One minute to paint a single picket 
+• 30 minutes of cleanup (serial)
+Thus, 300 pickets takes 360 minutes if 
+processed in serial.
+
+Number of • so minutes (serial) Speedup 
+painters . t m jnute to pa in t a
+single picket (300 
+pickets)
+• 30 minutes (serial)
+Time
+
+30 + 300 + 30 = 360 1.0X
+2 30 + 150 + 30 = 210 1.7X
+
+10 30 + 30 + 30 = 90 4.0X
+
+100 30 + 3 + 30 = 63 5.7X
+
+Infinite 30 + 0 + 30 = 60 6.0X
+
+Serial Time 
+Parallel Time
+
+Speedup=
+
+• For N=1 (Serial) => SpeedUp = 360/360=1
+• For N=2 (Parallel) => SpeedUp = 360/210 = 1.7 
+• For N=10 (Parallel) => SpeedUp = 360/90 = 4
+
+
+Performance Evaluation - Efficiency
+• Efficiency
+• Measure of how effectively computation resources (threads) are kept busy
+
+Speedup
+Efficiency = Numbe of Threads x 100
+
+Number of 
+painters
+
+• 30 minutes (serial)
+• 1 minute to paint a
+single picket (300 
+pickets)
+• 30 minutes (serial)
+Time
+
+Speedup Efficiency J
+1
+
+1 30 + 300 + 30 = 360 1 10X I 100%
+2 30 + 150 + 30 = 210 1.7X 85%
+10 30 + 30 + 30 = 90 4.0X 40%
+100 30 + 3 + 30 = 63 5.7X 5.7% 
+Infinite 30 + 0 + 30 = 60 6.0X very low
+
+For N=1 (Serial) => Efficiency = 1/1*100 =100
+For N=2 (Parallel) => Efficiency = 1.7/2 *100 =85 
+For N=10 (Parallel) => Efficiency = 4/10 *100 =40
+
+
+Performance Evaluation of Parallel 
+Processors - Amdahl’s Law
+• Amdahl's Law - SpeedUp Performance Law
+"Law governing the speedup of using parallel processors on
+a problem, versus using only one serial processor, under the 
+assumption that the problem size remains the same when 
+parallelized".
+
+
+Performance Evaluation of Parallel 
+Processors - Amdahl’s Law
+The potential speedup of an algorithm on parallel computing platform is given by 
+Amdahl’s Law; originally formulated by Gene Amdahl’s on 1 960’s
+It is one of the speedup performance law
+It is based on a fixed problem size (or fixed work load)
+Actually to keep the efficiency of system fixed we have to increase both the size of the 
+problem and the no. of processors simultaneously
+Amdahl’s Law tells that for a given problem size, the speedup doesn't increase linearly 
+as the number of processor increases. In fact, speed-up tends to become saturated 
+Amdahl’s law states that a small portion of the program which cannot be 
+parallelized (serial part), will limit the overall speed-up, available from 
+parallelization
+□ Typically, any large mathematical or engineering problem consists of several parallelizable
+parts & several serial (non-parallelizable) parts
+Computation Problem = Serial Part + Parallel Part
+
+
+Performance Evaluation of Parallel 
+Processors - Amdahl’s Law
+The speedup of a program using multiple processors in parallel computing is limited by 
+the time needed for the sequential fraction (non-parallelizable part ) of the program.
+Amdahl's Law
+
+Parallel portion
+--------- 50%
+********* 75%
+--------- 90%
+--------- 95%
+
+Numljtr of piocewori
+
+
+Performance Evaluation of Parallel 
+Processors - Amdahl’s Law
+• Speedllp - Ratio of the time it takes to execute a program in serial(with one processor)
+to the time it takes to execute in parallel (with many processors)
+Time to execute program on a single processor 
+Speedup = Time to execute program on N parallel processors
+
+• Let
+
+T
+
+f= fraction of the execution time that involves code 
+that is infinitely parallelizable with no scheduling overhead.
+(1-f) = fraction of the execution time that involves 
+code that is inherently sequential
+T = Total execution time of the program using a single
+
+(I -f)T
+
+T(1 - f) + Tf
+Tf
+
+processor
+
+Speedup =
+Then, fT
+
+(I -f)T N
+T
+Illustration of Amdahl's Law
+
+
+Performance Evaluation of Parallel 
+Processors - Amdahl’s Law
+• Two Important Conclusions drawn
+• When//s small, the use of parallel processors has little effect.
+• As N approaches infinity, speedup is bound by 1/(1 - f), so that there are diminishing
+returns for using more processors.
+• Amdahl's law can be generalized to evaluate any design
+Speedup = -----------------—
+or technical improvement in a computer system. rp -n +
+• Consider any enhancement to a feature of a system that = i
+
+f
+
+results in a speedup. (1-n + iv
+The speedup can be expressed as
+Performance after enhancement Execution time before enhancement 
+Performance before enhancement Execution time after enhancement
+
+
+Performance Evaluation of Parallel 
+Processors - Amdahl’s Law
+„Sp eedup = -----~--f)
+
+The speedup can be expressed as -—
+Performance after enhancement 
+Speedup = —— ----------- — ---------------------
+Performance before enhancement
+
+Execution time before enhancement 
+Execution lime after enhancement
+
+Suppose that a feature of the system 
+is enhanced to improve the 
+performance.
+• Letf = a fraction of the time before
+enhancement (fE)
+• Suf = speedup of that feature after
+enhancement
+• T-i j.1 H i overall Speedup =
+
+Then the overall speedup 
+of the system is
+
+Amdahl's Law -for Fraction 
+Enhancement
+Consider fE- Fraction Enhanced (f)
+1-fE- Unaffected Fraction (1-f)
+fl = Factor of Improvement (SUf or N) 
+Then the overall speedup of the system is
+S = ((l -fE) + (fE/fl) ) A-1
+
+rSU,
+
+
+Performance Evaluation - Problems
+Problem 1
+70% of a program’s execution time occurs inside a loop that can be executed in 
+parallel and rest 30% in serial. What is the maximum speedup we should expect 
+from a parallel version of the program executing on 8 CPUs?
+f=0.7 
+l-f=0.3 
+N=8
+
+i
+
+Speedup =
+
+N
+1S1p1eedup = ----p — ----------- — ------- —
+
+r r 0 3+— 0.3 + 0.0875 0.3875
+8
+
+
+Performance Evaluation - Problems
+Problem 2
+80% of a program’s execution time occurs inside a loop that can be executed in 
+parallel and rest 20% in serial. What is the maximum speedup we should expect 
+from a parallel version of the program executing on 8 CPUs?
+f=0.8 
+l-f=0.2 
+N=8
+
+i
+
+Speedup =
+
+N
+
+Speedup = ----ng 
+0.2+-J-
+8
+
+3.33
+
+0.2+0.1 0.3
+
+
+Performance Evaluation - Problems
+Problem 3
+95% of a program’s execution time occurs inside a loop that can be
+executed in parallel and rest 5% in serial. What is the maximum speedup 
+we should expect from a parallel version of the program executing on 8 
+CPUs?
+
+i
+
+Speedup
+
+f=0.95 
+l-f=0.05 
+N=8
+
+N
+
+Speedup =
+
+» 05+T
+
+
+Performance Evaluation - Problems
+Problem 4
+We have 4 processors and only 10% of the code is parallelizable. Find the 
+speed up.
+f = 10% = 0.1 Speedup = ----- -----
+l-f=0.9 <1-/) + N
+N=4
+
+Srpeedurp = -----sr = --------------- = --------
+0.9+— 0.9+0.025 0.925
+4
+
+1.081
+
+
+Performance Evaluation - Problems 
+- Overall Speedup
+Problem 5 - Finding Overall speed up - Given, speedup of the enhanced 
+machine. Floating point instructions are improved to run twice as fast,
+but only 10% of the time was spent on these instructions 
+originally. How much faster is the new machine?
+f=10% = 0.1 !
+_ Q Q overall Speedup = ---------------—
+(1 - /) + —
+
+Speedup of enhanced machine (SU f)=2 su f
+Srpeedurp = — = — - — = = 1.053
+
+0 9+— 0.9+0.05 0.95
+2
+How much faster would the new machine be if floating Speedup = --Ar = 1-109 
+point instructions become 100 times faster? 0 9+ 77
+
+
+Problem 6
+Problem Type 1 - Predict System Sppedyp
+Example: Let a program have 40 percent of its code enhanced (so fE = 0.4) to run 
+2.3 times faster (so fl = 2.3). What is the overall system speedup S?
+
+Solution:
+> Step 1: Setup the equation: S = ( (1 - fE) + (fE / fl) )A-1 
+> Step 2: Plug in values & solve
+> S = ((l - 0.4) + (0.4 / 2.3) )-l = (0.6 + 0.174 ) A-1
+> =1 /0.774 = 1.292 Amdahl's Law -for Fraction
+Enhancement
+Consider fE - Fraction Enhanced (f)
+1-fE - Unaffected Fraction (1-f)
+fl = Factor of Improvement (SUf or N) 
+Then the overall speedup of the system is
+S = ( (1 - IE) + (fE / fl) )A-1
+
+Hint: (Similarity) j
+Speedup — ---------------
+Consider /1 n . £_
+* 7 N
+• fE - Fraction Enhanced (f)
+• 1-fE - Unaffected Fraction (1-f)
+• fl = Factor of Improvement (SUf or N)
+
+
+Problem 7
+Problem Type 2 - Predict Speedup of Fraction Enhanced
+Example: Let a program have 40 percent of its code enhanced (so fE = 0.4) to 
+yield a system speedup 4.3 times faster (so S = 4.3). What is the factor of 
+improvement fl of the portion enhanced?
+Solution:
+Case #1 : Can we do this? In other words, let’s determine if by enhancing 40 
+percent of the system, it is possible to make the system go 4.3 times faster
+Step 1: Assume the limit, where fl = infinity, so S = ((i-tE) + (iE/fl) r-i
+S = 1 / (I - fE)
+Step 2: Plug in values & solve S = ( (1 - 0.4) )-l = 1 / 0.6 = 1.67 .
+Step 3: So S = 1 .67 is the maximum possible speedup, and we cannot achieve S 
+= 4.3 !!
+Consider fE - Fraction Enhanced (f)
+• 1-fE - Unaffected Fraction (1-f)
+• fl = Factor of Improvement (SUf or N)
+
+Speedup =
+
+
+Problem 8
+J different case-. Let’s determine if by enhancing 40 percent of the system, it is possible to make 
+the system go 13 limes faster ...
+Step /: Assume the limit, where fj = infinity, so S - ( ( 1 — fE) + (ft I fi) )’* -> S = 1 I ( 1 - f1:) 
+Step 2: Plug in values & solve S = ( (1 — 0.4) )'1 = 1 / 0.6 = 1.67 .
+Step 3: So S = I .67 is the maximum possible speedup, and we can achieve S = 13 !!
+Step 7: Solve speedup equation for f| : 1/S = (1 - fr) + (ft fj) [invert both sides]
+1/S — (1 - ft) = fj- / fi [subtract ( 1 - fL)] 
+( 1/S — ( 1 - ft ) J’1 = fi / fE [invert both sides] 
+ft • (1/S - (I - ft) ) ‘ = fi [multiply by C]
+Step 5: Plug in values & solve: I] = fp * ( 1/S - ( 1 - fp) )‘l
+= 0.4 (1/13 -(1-0.4) f 1
+= 0.4/ (0.769 -0.6)= 2367
+Step 6: Check your work: S = ( ( 1 — fiO + (fr / fi) )*1 = ( 0.6 + (0.4/2367)) ’ = 13’/
+Hint: (Similarity)
+d-n + 4
+
+Consider fE - Fraction Enhanced (f)
+• 1-fE - Unaffected Fraction (1-f)
+• fl = Fraction of Enhancement (SUf or N)
+
+Speedup =
+
+
+Problem 9
+Problem Type 3 - Predict Fraction of System to be Enhanced
+Example: Let a program have a portion IE of its code enhanced to run 4 times 
+faster (so 11 = 4), to yield a system speedup 3.3 times faster (so S = 3.3). What is 
+the fraction enhanced (fE)?
+Step /: Can this he done! Assuming fi - infinity. S = 3.3 = ( ( 1 - fE) )_] so minimum ft - 0.697
+Yes, this can be done for maximum f|, so let's solve the equation to determine actual fE 
+Solve speedup equation for fE : S = ( ( 1 — fE) + (fE / fi) )-1 [state the equation]
+3.3 = ( ( 1 — fE) + (fe i 4) )u [plug in values]
+(1 - ft) + fE/4= 1/3.3 = 0.303 [invert both sides]
+I - 0.75fE = 0.303
+0.75fE = 1 -0.303 = 0.697
+fE = 0.697/ 0.75 = 0.929
+
+[commutativity] 
+[divide by 0.75]
+Step 3: Check your work: = (0.071 + 10.929/4 VP1 = 3.3 Z
+Hint: (Similarity)
+Speedup =
+Consider fE - Fraction Enhanced (f)
+• 1-fE - Unaffected Fraction (1-f)
+
+N
+
+• fl= Fraction of Enhancement (SU? or N)
+
+
+Problem 10
+
+Performance Enhancement Example
+• For the RISC machine with the following instruction mix given earlier:
+Op Freq Cycles CPI(i) % Time
+ALU 50% 1 .5 23%
+Load 20% 5 1.0 45% CPI = 2.2 __________ 
+Store 10% 3 .3 14%/u ' i
+
+I’rom a prcvmiK exampl
+
+Branch 20% 2 .4 18%
+• If a CPU design enhancement improves the CPI of load instructions
+from 5 to 2, what is the resulting performance improvement from this 
+enhancement:
+Fraction enhanced = F = 45% or .45
+Unaffected fraction = 1- F = 100% - 45% = 55% or .55 
+Factor of enhancement = S = 5/2= 2.5
+Using Amdahl’s Law:
+1 1
+Speedup(E) = --------------- = ------------------ ■ 1.37
+(1 - F) + F/S ,55 + .45/2.5
+
+
+Problem 11
+
+A program runs in 100 seconds on a machine with multiply 
+operations responsible for 80 seconds of this time. By how much 
+must the speed of multiplication be improved to make the program 
+four times faster?
+100
+Desired speedup = 4 = --------------------------------------------
+Execution Time with enhancement
+Execution time with enhancement = 100/4 = 25 seconds
+25 seconds = (100 - 80 seconds) + 80 seconds / S 
+25 seconds “ 20 seconds + 80 seconds f S
+5 = 80 seconds f S 
+S = 80/5 = 16
+Alternatively it can also be solved by finding enhanced fraction of execution time:
+F= 80/1 00 = .8
+and then solving Amdahl's speedup equation for desired enhancement factor S
+1 1 1
+Speedup(E) = ...................... - 4 - ................... =
+(1 - F) + F/S (1 - .8) + .8/S .2 + ,8/s
+Hence multiplication should be 16 times Solving for s gives S- 16
+faster to get an overall speedup of 4. G<
+
+
+Problem 12
+• For the previous example with a program running in 100 seconds on 
+a machine with multiply operations responsible for 80 seconds of this
+time. By how much must the speed of multiplication be improved 
+to make the program five times faster?
+100
+Desired speedup = 5 = --------------------------------------------------
+Execution Time with enhancement
+Execution time with enhancement = 100/5 = 20 seconds
+20 seconds = (100 - 80 seconds) + 80 seconds / s 
+20 seconds = 20 seconds + 80 seconds I s
+0 = 80 seconds / s
+No amount of multiplication speed improvement can achieve this.

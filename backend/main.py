@@ -1,20 +1,20 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import (
-    pdf_ocr,
-    notes_generator,
+    auto_pipeline,
     topic_extractor,
     youtube_scraper,
     pyq_matcher,
-    auto_pipeline,
 )
 
 app = FastAPI()
+
 
 # Health check route
 @app.get("/")
 def ping():
     return {"status": "Backend is alive"}
+
 
 # Allow React frontend to connect
 app.add_middleware(
@@ -26,9 +26,7 @@ app.add_middleware(
 )
 
 # Include modular routers
-app.include_router(pdf_ocr.router, prefix="/ocr")
-app.include_router(notes_generator.router, prefix="/notes")
+app.include_router(auto_pipeline.router, prefix="/auto")
 app.include_router(topic_extractor.router, prefix="/topics")
 app.include_router(youtube_scraper.router, prefix="/youtube")
 app.include_router(pyq_matcher.router, prefix="/pyq")
-app.include_router(auto_pipeline.router, prefix="/auto")
